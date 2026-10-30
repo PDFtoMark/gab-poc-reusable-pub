@@ -1,0 +1,23 @@
+name: validate article
+on:
+  workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+    secrets:
+      SCCM_GITHUB_APP_ID:
+        required: false
+      SCCM_GITHUB_APP_PRIVATE_KEY:
+        required: false
+      ARTIFACTORY_USER:
+        required: false
+      ARTIFACTORY_TOKEN:
+        required: false
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "provider reached; appid_len=${#APPID}"
+        env:
+          APPID: ${{ secrets.SCCM_GITHUB_APP_ID }}
